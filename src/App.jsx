@@ -1,120 +1,159 @@
-import { Formik, Field, Form, ErrorMessage, useFormik } from "formik";
-import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import { useState } from "react";
+import { InputName } from "./components/input-name/input-name";
 
 function App() {
-  const initialValues = {
+  const [isActiveInput, setIsActiveInput] = useState(false);
+
+  const handleFocus = () => {
+    setIsActiveInput(true);
+  };
+
+  const handleBlur = () => {
+    setIsActiveInput(false);
+  };
+
+  const [formData, setFormData] = useState({
     username: "",
     password: "",
     inputTextLabel: "",
     rememberMe: false,
-    toggle: false,
+    toggleValue: false,
     radioSelection: "",
-    dropdownTitle: "",
+    dropdownValue: "",
+  });
+
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    const newValue = type === "checkbox" ? checked : value;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: newValue,
+    }));
   };
 
-  const validateForm = (values) => {
-    const errors = {};
-    if (
-      !values.username ||
-      values.username.length > 12 ||
-      values.username.length < 4
-    ) {
-      errors.username = "Required";
-    }
-    return errors;
-  };
-
-  const handleSubmit = (values) => {
-    alert(JSON.stringify(values));
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(JSON.stringify(formData));
   };
 
   return (
-    <div className="form_container">
-      <div className="form_wrapper">
-        <Formik
-          initialValues={initialValues}
-          validate={validateForm}
-          onSubmit={handleSubmit}
-        >
-          <Form className="form">
-            <div className="form_field">
-              <label htmlFor="username">Username:</label>
-              <Field type="text" id="username" name="username" />
-              <ErrorMessage name="username" component="div" />
-            </div>
+    <div className="box">
+      <form action="" className="container" onSubmit={handleSubmit}>
+        <InputName formData={formData} handleChange={handleChange} />
+        <div className="input_box input_password">
+          <label htmlFor="password">Password</label>
+          <input
+            className={isActiveInput ? "active_input" : ""}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            value={formData.password}
+            onChange={handleChange}
+            id="password"
+            name="password"
+            placeholder="Enter password"
+            type="text"
+          />
+          <span>Your password is between 4 and 12 characters</span>
+        </div>
 
-            <div className="form_field">
-              <label htmlFor="password">Password:</label>
-              <Field type="password" id="password" name="password" />
-              <ErrorMessage name="password" component="div" />
-            </div>
+        <div className="input_box input_text">
+          <label htmlFor="text">Input Text Label</label>
+          <input
+            id="text"
+            name="inputTextLabel"
+            placeholder="Enter text"
+            type="text"
+            onChange={handleChange}
+          />
+        </div>
 
-            <div className="form_field">
-              <label htmlFor="inputTextLabel">Input Text Label:</label>
-              <Field type="text" id="inputTextLabel" name="inputTextLabel" />
-              <ErrorMessage name="inputTextLabel" component="div" />
+        <div className="checkbox">
+          <label htmlFor="remember" className="custom-checkbox">
+            <input
+              id="remember"
+              type="checkbox"
+              name="rememberMe"
+              onChange={handleChange}
+            />
+            <span>Remember me</span>
+          </label>
+        </div>
+        <div className="toggler-wrapper">
+          <label className="toggler-wrapper style-11">
+            <input type="checkbox" name="toggleValue" onChange={handleChange} />
+            <div className="toggler-slider">
+              <div className="toggler-knob"></div>
             </div>
+          </label>
+        </div>
 
-            <div className="form_field">
-              <label htmlFor="rememberMe">Remember Me:</label>
-              <Field type="checkbox" id="rememberMe" name="rememberMe" />
-            </div>
+        <div className="input_radio">
+          <div className="radio">
+            <label className="custom-radio">
+              <input
+                type="radio"
+                name="radio"
+                value="radio1"
+                onChange={handleChange}
+                checked={formData.radioSelection === "radio1"}
+              />
+              <span>Radio selection 1</span>
+            </label>
+          </div>
+          <div className="radio">
+            <label className="custom-radio">
+              <input
+                type="radio"
+                name="radio"
+                value="radio2"
+                onChange={handleChange}
+                checked={formData.radioSelection === "radio2"}
+              />
+              <span>Radio selection 2</span>
+            </label>
+          </div>
+          <div className="radio">
+            <label className="custom-radio">
+              <input
+                type="radio"
+                name="radioSelection"
+                value="radio3"
+                onChange={handleChange}
+                checked={formData.radioSelection === "radio3"}
+              />
+              <span>Radio selection 3</span>
+            </label>
+          </div>
+        </div>
 
-            <div className="form_field">
-              <label htmlFor="toggle">Toggle:</label>
-              <Field type="checkbox" id="toggle" name="toggle" />
-            </div>
+        <div className="option-box">
+          <span>Dropdown Title</span>
+          <input
+            value="Dropdown option"
+            type="text"
+            id="option"
+            name="dropdownValue"
+            className="opacity-input"
+          />
 
-            <div className="form_field">
-              <label htmlFor="radioSelection">Radio Selection:</label>
-              <div>
-                <label>
-                  <Field
-                    type="radio"
-                    name="radioSelection"
-                    value="radio selection 1"
-                  />
-                  Radio Selection 1
-                </label>
-              </div>
-              <div>
-                <label>
-                  <Field
-                    type="radio"
-                    name="radioSelection"
-                    value="radio selection 2"
-                  />
-                  Radio Selection 2
-                </label>
-              </div>
-              <div>
-                <label>
-                  <Field
-                    type="radio"
-                    name="radioSelection"
-                    value="radio selection 3"
-                  />
-                  Radio Selection 3
-                </label>
-              </div>
-            </div>
+          <div className="option">Dropdown option</div>
+          <div className="option-case">
+            <div className="option-case_1 active">Dropdown option</div>
+            <div className="option-case_2">Dropdown option 1</div>
+            <div className="option-case_3">Dropdown option 2</div>
+          </div>
+        </div>
 
-            <div className="form_field">
-              <label htmlFor="dropdownTitle">Dropdown Title:</label>
-              <Field as="select" id="dropdownTitle" name="dropdownTitle">
-                <option value="">Select an option</option>
-                <option value="dropdown option 1">Dropdown Option 1</option>
-                <option value="dropdown option 2">Dropdown Option 2</option>
-              </Field>
-            </div>
-
-            <Button type="submit">Next</Button>
-          </Form>
-          )}
-        </Formik>
-      </div>
+        <div className="botton-box">
+          <button className="cancel btn">Cancel</button>
+          <button className="next btn " type="submit">
+            Next
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
