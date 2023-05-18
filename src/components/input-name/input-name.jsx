@@ -1,7 +1,12 @@
 import "../../App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const InputName = ({ formData, handleChange }) => {
+const InputName = ({
+  formData,
+  handleChange,
+  isValidUsername,
+  setIsValidUsername,
+}) => {
   const [isActiveInput, setIsActiveInput] = useState(false);
 
   const handleFocus = () => {
@@ -11,20 +16,35 @@ const InputName = ({ formData, handleChange }) => {
   const handleBlur = () => {
     setIsActiveInput(false);
   };
+
+  useEffect(() => {
+    const trimmedValue = formData.username.trim();
+    const isValidUsername = trimmedValue.length > 0;
+    setIsValidUsername(isValidUsername);
+  }, [formData.username, setIsValidUsername]);
+
+  const handleInputChange = (event) => {
+    handleChange(event);
+  };
+
   return (
-    <div className="input_box input_username input_error">
+    <div
+      className={`input_box input_username ${
+        isActiveInput ? "input_active" : isValidUsername ? "" : "input_error"
+      }`}
+    >
       <label htmlFor="username">Username</label>
       <input
-        className={isActiveInput ? "active_input" : ""}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onChange={handleChange}
+        onChange={handleInputChange}
         id="username"
         name="username"
         placeholder="Enter username"
         type="text"
         value={formData.username}
       />
+      {isValidUsername ? "" : <span>Enter your name</span>}
     </div>
   );
 };
