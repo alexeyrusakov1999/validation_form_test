@@ -8,9 +8,14 @@ const InputPassword = ({
   setIsValidPassword,
 }) => {
   const [isActiveInput, setIsActiveInput] = useState(false);
+  const [isInputActivated, setIsInputActivated] = useState(false);
 
   const handleFocus = () => {
     setIsActiveInput(true);
+
+    if (!isInputActivated) {
+      setIsInputActivated(true);
+    }
   };
 
   const handleBlur = () => {
@@ -30,7 +35,13 @@ const InputPassword = ({
   return (
     <div
       className={`input_box input_password ${
-        isActiveInput ? "input_active" : isValidPassword ? "" : "input_error"
+        isActiveInput
+          ? "input_active"
+          : isValidPassword
+          ? ""
+          : isInputActivated
+          ? "input_error"
+          : ""
       }`}
     >
       <label htmlFor="password">Password</label>

@@ -8,9 +8,14 @@ const InputName = ({
   setIsValidUsername,
 }) => {
   const [isActiveInput, setIsActiveInput] = useState(false);
+  const [isInputActivated, setIsInputActivated] = useState(false);
 
   const handleFocus = () => {
     setIsActiveInput(true);
+
+    if (!isInputActivated) {
+      setIsInputActivated(true);
+    }
   };
 
   const handleBlur = () => {
@@ -21,7 +26,7 @@ const InputName = ({
     const trimmedValue = formData.username.trim();
     const isValidUsername = trimmedValue.length > 0;
     setIsValidUsername(isValidUsername);
-  }, [formData.username, setIsValidUsername]);
+  }, [formData.username, setIsValidUsername, isActiveInput]);
 
   const handleInputChange = (event) => {
     handleChange(event);
@@ -30,7 +35,13 @@ const InputName = ({
   return (
     <div
       className={`input_box input_username ${
-        isActiveInput ? "input_active" : isValidUsername ? "" : "input_error"
+        isActiveInput
+          ? "input_active"
+          : isValidUsername
+          ? ""
+          : isInputActivated
+          ? "input_error"
+          : ""
       }`}
     >
       <label htmlFor="username">Username</label>

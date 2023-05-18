@@ -3,9 +3,14 @@ import { useState, useEffect } from "react";
 
 const InputText = ({ formData, handleChange, setIsValidText, isValidText }) => {
   const [isActiveInput, setIsActiveInput] = useState(false);
+  const [isInputActivated, setIsInputActivated] = useState(false);
 
   const handleFocus = () => {
     setIsActiveInput(true);
+
+    if (!isInputActivated) {
+      setIsInputActivated(true);
+    }
   };
 
   const handleBlur = () => {
@@ -24,7 +29,13 @@ const InputText = ({ formData, handleChange, setIsValidText, isValidText }) => {
   return (
     <div
       className={`input_box input_text ${
-        isActiveInput ? "input_active" : isValidText ? "" : "input_error"
+        isActiveInput
+          ? "input_active"
+          : isValidText
+          ? ""
+          : isInputActivated
+          ? "input_error"
+          : ""
       }`}
     >
       <label htmlFor="text">Input Text Label</label>
